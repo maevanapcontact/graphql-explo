@@ -5,6 +5,7 @@ const {
   GraphQLID,
   GraphQLString,
   GraphQLInt,
+  GraphQLList,
 } = require("graphql");
 
 const QuestType = new GraphQLObjectType({
@@ -15,6 +16,14 @@ const QuestType = new GraphQLObjectType({
     name: { type: GraphQLString },
     description: { type: GraphQLString },
     status: { type: GraphQLString },
+    character: {
+      type: CharacterType,
+      resolve(parent, args) {
+        return characters.find(
+          (character) => character.id === parent.characterId
+        );
+      },
+    },
   }),
 });
 
@@ -36,6 +45,25 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return quests.find((quest) => quest.id === args.id);
+      },
+    },
+    quests: {
+      type: new GraphQLList(QuestType),
+      resolve(parent, args) {
+        return quests;
+      },
+    },
+    character: {
+      type: CharacterType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return characters.find((character) => character.id === args.id);
+      },
+    },
+    characters: {
+      type: new GraphQLList(CharacterType),
+      resolve(parent, args) {
+        return characters;
       },
     },
   },
