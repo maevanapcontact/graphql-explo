@@ -68,4 +68,4 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
-module.exports = { RootQuery };
+module.exports = { QuestType, CharacterType, RootQuery };
