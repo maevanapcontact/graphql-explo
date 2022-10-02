@@ -1,5 +1,3 @@
-const { quests, characters } = require("../../__mocks__/data");
-
 const {
   GraphQLObjectType,
   GraphQLID,
@@ -7,6 +5,9 @@ const {
   GraphQLInt,
   GraphQLList,
 } = require("graphql");
+
+const Character = require("../../models/Character");
+const Quest = require("../../models/Quest");
 
 const QuestType = new GraphQLObjectType({
   name: "Quest",
@@ -19,9 +20,7 @@ const QuestType = new GraphQLObjectType({
     character: {
       type: CharacterType,
       resolve(parent, args) {
-        return characters.find(
-          (character) => character.id === parent.characterId
-        );
+        return Character.findById(parent.characterId);
       },
     },
   }),
@@ -44,26 +43,26 @@ const RootQuery = new GraphQLObjectType({
       type: QuestType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return quests.find((quest) => quest.id === args.id);
+        return Quest.findById(args.id);
       },
     },
     quests: {
       type: new GraphQLList(QuestType),
       resolve(parent, args) {
-        return quests;
+        return Quest.find();
       },
     },
     character: {
       type: CharacterType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return characters.find((character) => character.id === args.id);
+        return Character.findById(args.id);
       },
     },
     characters: {
       type: new GraphQLList(CharacterType),
       resolve(parent, args) {
-        return characters;
+        return Character.find();
       },
     },
   },
