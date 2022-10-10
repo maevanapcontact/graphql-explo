@@ -46,6 +46,9 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, args) {
+        Quest.find({ characterId: args.id }).then((quests) => {
+          quests.forEach((quest) => quest.remove());
+        });
         return Character.findByIdAndRemove(args.id);
       },
     },
